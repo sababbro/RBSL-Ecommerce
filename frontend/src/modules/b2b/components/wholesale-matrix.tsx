@@ -142,7 +142,7 @@ export default function WholesaleMatrix({ initialItems }: { initialItems: Matrix
       })
     } catch (error) {
       console.error(error)
-      toast.error("Process aborted. Sydney Hub sync failed.")
+      toast.error("Process aborted. Dhaka Unit sync failed.")
     } finally {
       setIsSubmitting(false)
     }
@@ -249,7 +249,7 @@ export default function WholesaleMatrix({ initialItems }: { initialItems: Matrix
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-3 h-3 mr-3 animate-spin" />
-                      Provisioning Sydney Hub...
+                      Provisioning Dhaka Unit...
                     </>
                   ) : (
                     "Authorize Purchase Order"

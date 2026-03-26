@@ -47,7 +47,7 @@ const processB2BInventoryStep = createStep(
       return new StepResponse({ success: true, message: "No items to process" })
     }
 
-    // Sydney Cluster Inventory Reservation
+    // Dhaka Unit Inventory Reservation
     for (const item of items) {
       if (item.variant_id) {
         // Find inventory items for the variant
@@ -61,7 +61,7 @@ const processB2BInventoryStep = createStep(
           // Adjust inventory (Deduct)
           await inventoryModule.adjustInventory(
             inventoryItems[0].id,
-            "Syd_Warehouse_01", // Specialized Sydney B2B Location
+            "Dhk_Warehouse_01", // Specialized Dhaka B2B Location
             -item.quantity
           )
         }

@@ -1,6 +1,6 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk"
 import { Container, Heading, Text, Badge } from "@medusajs/ui"
-import { BuildingStorefront, IdentificationBadge, DocumentText } from "@medusajs/icons"
+import { BuildingStorefront, FaceSmile as User, DocumentText } from "@medusajs/icons"
 
 type OrderWidgetProps = {
   data: {
@@ -77,7 +77,7 @@ const OrderComplianceWidget = ({ data }: OrderWidgetProps) => {
             {/* BIN */}
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1.5 mb-1">
-                <IdentificationBadge className="text-ui-fg-subtle" style={{ width: 14, height: 14 }} />
+                <User className="text-ui-fg-subtle" style={{ width: 14, height: 14 }} />
                 <Text
                   size="xsmall"
                   weight="plus"

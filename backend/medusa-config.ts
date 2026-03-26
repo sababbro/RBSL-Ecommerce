@@ -33,6 +33,16 @@ module.exports = defineConfig({
             id: "rbsl-corporate-credit",
             options: {},
           },
+          {
+            resolve: "./src/modules/rbsl-payment-bkash",
+            id: "rbsl-bkash",
+            options: {},
+          },
+          {
+            resolve: "./src/modules/rbsl-payment-nagad",
+            id: "rbsl-nagad",
+            options: {},
+          },
         ],
       },
     },

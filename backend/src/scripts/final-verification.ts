@@ -25,8 +25,8 @@ export default async function completeRBSLVerification({ container }: ExecArgs) 
       first_name: "John",
       last_name: "Retail",
       address_1: "Retail Street 1",
-      city: "Sydney",
-      country_code: "AU"
+      city: "Dhaka",
+      country_code: "BD"
     },
     items: [{
       title: product.title,
@@ -83,9 +83,9 @@ export default async function completeRBSLVerification({ container }: ExecArgs) 
   
   logger.info("--- FINAL RBSL INFRASTRUCTURE REPORT ---")
   logger.info("1. Product Engine: ONLINE (Scientific Series Cataloged)")
-  logger.info("2. B2C Pipeline: ACTIVE (Sydney Retail Cluster Verified)")
+  logger.info("2. B2C Pipeline: ACTIVE (Dhaka Retail Cluster Verified)")
   logger.info("3. B2B Sovereignty: ACTIVE (Intl. Compliance Gateways Verified)")
-  logger.info("4. Logistics Feed: ENGAGED (Sydney Hub -> UAE Manifest Generated)")
+  logger.info("4. Logistics Feed: ENGAGED (Dhaka Unit -> Global Manifest Generated)")
   logger.info("-----------------------------------------")
   logger.info("ALL SYSTEMS OPERATIONAL (PHASE 6 DEPLOYMENT READY)")
 }

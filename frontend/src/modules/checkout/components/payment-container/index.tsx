@@ -1,6 +1,7 @@
 import { Radio as RadioGroupOption } from "@headlessui/react"
 import { Text, clx } from "@medusajs/ui"
 import React, { useContext, useMemo, type JSX } from "react"
+import { AlertCircle } from "lucide-react"
 
 import Radio from "@modules/common/components/radio"
 
@@ -164,7 +165,7 @@ export const RBSLBankTransferContainer = ({
             </div>
           ) : (
             <p className="text-[9px] text-white/40 font-bold uppercase tracking-widest leading-relaxed italic">
-              Bank Deposit / Swift transmission required. Sydney Hub allocation will remain in STDBY status until Proof of Payment is authorized.
+              Bank Deposit / Swift transmission required. Dhaka Unit allocation will remain in STDBY status until Proof of Payment is authorized.
             </p>
           )}
 
@@ -172,6 +173,80 @@ export const RBSLBankTransferContainer = ({
             <span className="text-[8px] font-black uppercase tracking-widest text-white/20">Protocol: RBSL-CAP-ACCORD-2024</span>
             <span className="text-[8px] font-black uppercase tracking-widest text-emerald-500">Verified Strategic Partner</span>
           </div>
+        </div>
+      )}
+    </PaymentContainer>
+  )
+}
+
+export const MFSValidationCard = ({
+  paymentProviderId,
+  selectedPaymentOptionId,
+  paymentInfoMap,
+  disabled = false,
+  updateData,
+  data,
+}: Omit<PaymentContainerProps, "children"> & {
+  updateData: (data: Record<string, any>) => void
+  data: Record<string, any>
+}) => {
+  const isTrxIdInvalid = data.trx_id && data.trx_id.length > 0 && data.trx_id.length !== 10
+
+  return (
+    <PaymentContainer
+      paymentProviderId={paymentProviderId}
+      selectedPaymentOptionId={selectedPaymentOptionId}
+      paymentInfoMap={paymentInfoMap}
+      disabled={disabled}
+    >
+      {selectedPaymentOptionId === paymentProviderId && (
+        <div className="mt-4 p-6 bg-black text-white rounded-lg border border-white/10 space-y-4">
+          <div className="flex items-center space-x-2">
+            <div className={clx("w-2 h-2 rounded-full shadow-[0_0_10px_currentColor]", {
+               "bg-pink-600 text-pink-600": paymentProviderId === "rbsl-bkash",
+               "bg-orange-600 text-orange-600": paymentProviderId === "rbsl-nagad"
+            })} />
+            <h4 className="text-[10px] font-black uppercase tracking-[0.2em]">
+              {paymentProviderId.split("-")[2]?.toUpperCase() || "MFS"} Localized Settlement
+            </h4>
+          </div>
+          
+          <div className="grid grid-cols-1 gap-4">
+             <div className="space-y-1">
+                <label className="text-[9px] font-black uppercase tracking-widest text-white/40">Sender Phone Number</label>
+                <input 
+                  type="text" 
+                  placeholder="017XXXXXXXX"
+                  value={data.sender_number || ""}
+                  onChange={(e) => updateData({ ...data, sender_number: e.target.value })}
+                  className="w-full bg-white/5 border border-white/10 rounded-md px-4 py-2 text-xs font-mono focus:outline-none focus:border-white transition-colors"
+                />
+             </div>
+             <div className="space-y-1">
+                <label className="text-[9px] font-black uppercase tracking-widest text-white/40">Transaction ID (TrxID)</label>
+                <input 
+                   type="text" 
+                   placeholder="A1B2C3D4E5"
+                   value={data.trx_id || ""}
+                   onChange={(e) => updateData({ ...data, trx_id: e.target.value })}
+                   className={clx("w-full bg-white/5 border border-white/10 rounded-md px-4 py-2 text-xs font-mono focus:outline-none focus:border-white transition-colors uppercase", {
+                     "border-red-500/50": isTrxIdInvalid
+                   })}
+                />
+                {isTrxIdInvalid && (
+                  <div className="flex items-center gap-2 mt-2 p-2 bg-red-500/10 border border-red-500/20 rounded">
+                     <AlertCircle className="w-3 h-3 text-red-500" />
+                     <p className="text-[8px] font-black uppercase tracking-widest text-red-500">
+                        Invalid TrxID format. <a href="mailto:finance-desk@rbsl.dhaka?subject=TrxID%20Discrepancy" className="underline hover:text-white transition-colors">Open Support Ticket</a>
+                     </p>
+                  </div>
+                )}
+             </div>
+          </div>
+
+          <p className="text-[8px] text-white/40 font-bold uppercase tracking-widest leading-relaxed italic border-t border-white/5 pt-4">
+             Authorized by Dhaka Unit Strategic Extraction Division. TrxID verification protocol active.
+          </p>
         </div>
       )}
     </PaymentContainer>

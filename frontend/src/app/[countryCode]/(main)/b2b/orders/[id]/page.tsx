@@ -28,7 +28,7 @@ export default async function B2BOrderPage({ params }: { params: { id: string } 
       status: b2bStatus === "confirmed" ? "current" : popVerified ? "completed" : "upcoming", 
       icon: ShieldCheck 
     },
-    { name: "Sydney Hub Release", status: "upcoming", icon: Truck },
+    { name: "Dhaka Unit Dispatch", status: "upcoming", icon: Truck },
   ]
 
   return (
@@ -96,7 +96,7 @@ export default async function B2BOrderPage({ params }: { params: { id: string } 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div>
                   <span className="text-[9px] font-black uppercase tracking-widest text-white/20 block mb-1">Batch Identifier</span>
-                  <span className="text-xs font-mono font-black text-white">{(order.metadata?.batch_id as string) || "RBSL-SYD-2024-08A"}</span>
+                  <span className="text-xs font-mono font-black text-white">{(order.metadata?.batch_id as string) || "RBSL-DHK-2026-01A"}</span>
                 </div>
                 <div>
                   <span className="text-[9px] font-black uppercase tracking-widest text-white/20 block mb-1">Extraction Date</span>
@@ -136,15 +136,15 @@ export default async function B2BOrderPage({ params }: { params: { id: string } 
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <ExportDocumentButton label="Commercial Invoice" orderId={order.id} type="invoice" />
-                <ExportDocumentButton label="Packing List" orderId={order.id} type="packing_list" />
-                <ExportDocumentButton label="Logistics Manifest" orderId={order.id} type="manifest" />
+                <ExportDocumentButton label="Commercial Invoice" order={order} type="invoice" />
+                <ExportDocumentButton label="Packing List" order={order} type="packing_list" />
+                <ExportDocumentButton label="Logistics Manifest" order={order} type="manifest" />
               </div>
 
               <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[9px] font-black uppercase tracking-widest text-white/40">Sydney Hub Origin: Authorized</span>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-white/40">Dhaka Unit Origin: Authorized</span>
                 </div>
                 <div className="text-[8px] font-black text-white/10 uppercase italic tracking-widest leading-relaxed text-right">
                   Manifest Status: {isHighCompliance ? "Sovereign Compliance Verified" : "Global Release Authorization"}
@@ -168,7 +168,7 @@ export default async function B2BOrderPage({ params }: { params: { id: string } 
                    </div>
                    <div className="text-right">
                       <div className="text-sm font-black text-white italic tracking-tighter">{`$${((item.unit_price * item.quantity) / 100).toLocaleString()}`}</div>
-                      <div className="text-[8px] font-black uppercase tracking-widest text-white/10 group-hover:text-white/40 transition-colors uppercase">Sydney Hub Reserved</div>
+                      <div className="text-[8px] font-black uppercase tracking-widest text-white/10 group-hover:text-white/40 transition-colors uppercase">Dhaka Unit Reserved</div>
                    </div>
                  </div>
                ))}
@@ -184,6 +184,43 @@ export default async function B2BOrderPage({ params }: { params: { id: string } 
                   </div>
                </div>
             </div>
+          </div>
+
+          {/* Chain of Custody Audit Trail */}
+          <div className="bg-black/40 p-10 rounded-xl border border-white/5 space-y-8 relative overflow-hidden group">
+             <div className="flex items-center space-x-3 border-b border-white/5 pb-6">
+                <Clock className="w-5 h-5 text-white/20" />
+                <h3 className="text-sm font-black uppercase tracking-[0.3em] text-white italic">Chain of Custody Audit Trail</h3>
+             </div>
+             
+             <div className="relative space-y-10 pl-6 border-l border-white/5 pb-2">
+                <div className="relative">
+                   <div className="absolute -left-[31px] top-1 w-2 h-2 rounded-full bg-white/20" />
+                   <div className="text-[9px] font-mono text-white/20 mb-1">{new Date(order.created_at).toLocaleString().toUpperCase()}</div>
+                   <div className="text-[10px] font-black uppercase tracking-widest text-white/60">Allocation Requested (Dhaka Unit)</div>
+                   <p className="text-[8px] text-white/10 mt-1 uppercase">Institutional procurement request logged from verified partner profile.</p>
+                </div>
+
+                {order.metadata?.settlement_status === "Local Settlement Verified" && (
+                   <div className="relative">
+                      <div className="absolute -left-[31px] top-1 w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]" />
+                      <div className="text-[9px] font-mono text-emerald-500/40 mb-1 uppercase italic">Verification Phase: Completed</div>
+                      <div className="text-[10px] font-black uppercase tracking-widest text-emerald-500">MFS Settlement Verified</div>
+                      <p className="text-[8px] text-white/40 mt-1 uppercase italic">Dhaka Unit Central Bank rail confirmed TrxID authorization.</p>
+                   </div>
+                )}
+
+                {(order.metadata?.settlement_status === "Local Settlement Verified" || popVerified) && (
+                   <div className="relative">
+                      <div className="absolute -left-[31px] top-1 w-2 h-2 rounded-full bg-white shadow-[0_0_10px_#fff]" />
+                      <div className="text-[9px] font-mono text-white/40 mb-1 uppercase italic">Seal Authority: Applied</div>
+                      <div className="text-[10px] font-black uppercase tracking-widest text-white flex items-center gap-2">
+                        Sovereign Seal Applied <ShieldCheck className="w-3 h-3 text-emerald-500" />
+                      </div>
+                      <p className="text-[8px] text-white/20 mt-1 uppercase">Institutional Digital Stamp injected into export manifest.</p>
+                   </div>
+                )}
+             </div>
           </div>
         </div>
 
@@ -202,8 +239,8 @@ export default async function B2BOrderPage({ params }: { params: { id: string } 
               </div>
               <div className="bg-black/5 p-6 rounded-lg border border-black/10">
                 <p className="text-[10px] italic leading-relaxed font-black uppercase tracking-widest">
-                  Our Australian compliance team is currently auditing your Swift transmission. 
-                  Reservation of Sydney Hub batch inventory is active.
+                  Our Dhaka compliance team is currently auditing your Swift transmission. 
+                  Reservation of Dhaka Unit batch inventory is active.
                 </p>
               </div>
             </div>
@@ -216,7 +253,7 @@ export default async function B2BOrderPage({ params }: { params: { id: string } 
              </div>
              <p className="text-[9px] text-white/20 font-bold uppercase tracking-widest leading-relaxed">
                 This order is governed by the Royal Bengal Shrooms Limited (RBSL) Institutional Charter. 
-                Any capital flow discrepancies will be resolved via the Australian-Bangladeshi Strategic Bio-Extraction Accord.
+                Any capital flow discrepancies will be resolved via the Dhaka Unit Strategic Bio-Extraction Accord.
              </p>
           </div>
         </div>

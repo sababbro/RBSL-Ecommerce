@@ -51,7 +51,7 @@ export const generateQuotePDF = (data: QuoteData) => {
   doc.text("PROCUREMENT QUOTATION", 130, 25)
   doc.setFontSize(8)
   doc.setFont("helvetica", "normal")
-  doc.text("Ref: RBSL-EXPORT-2024-SYS", 130, 32)
+  doc.text("Ref: RBSL-EXPORT-2026-DHK", 130, 32)
   
   // Document Info
   doc.setTextColor(0, 0, 0)
@@ -118,14 +118,20 @@ export const generateQuotePDF = (data: QuoteData) => {
   doc.text(`Institutional Total:`, summaryX, finalY + 29)
   doc.text(`$${(data.total / 100).toLocaleString()}`, 190, finalY + 29, { align: "right" })
   
-  // Official Infrastructure Placeholder
-  const sigY = Math.max(finalY + 50, 180)
-  doc.setFontSize(9)
-  doc.line(20, sigY, 80, sigY)
-  doc.text("RBSL Authorized Official Seal", 20, sigY + 5)
+  // Sovereign Seal Placeholder (Inject if authorized)
+  const sealY = Math.max(finalY + 50, 180)
   
-  doc.line(130, sigY, 190, sigY)
-  doc.text("Partner Authorization & Stamp", 130, sigY + 5)
+  // Add Signature Placeholder
+  doc.addImage("/assets/branding/signature.png", "PNG", 130, sealY, 60, 25)
+  doc.setFontSize(8)
+  doc.line(130, sealY + 25, 190, sealY + 25)
+  doc.text("Director, Strategic Extraction Division", 130, sealY + 29)
+  
+  // Add Sovereign Seal - Phase 5
+  doc.addImage("/assets/branding/sovereign-seal.png", "PNG", 20, sealY, 35, 35)
+  doc.setFontSize(7)
+  doc.setTextColor(150, 150, 150)
+  doc.text("RBSL AUTHORIZED OFFICIAL SEAL (DHAKA UNIT)", 21, sealY + 38)
 
   // Institutional Footer
   doc.setFontSize(8)
@@ -137,7 +143,7 @@ export const generateQuotePDF = (data: QuoteData) => {
   doc.setFont("helvetica", "normal")
   doc.text("Terms & Institutional Conditions:", 20, footerY - 3)
   doc.text("1. All extractions are standardized to EU/USP clinical benchmarks.", 20, footerY + 2)
-  doc.text("2. Logistical fulfillment is routed via the Sydney Strategic Hub cluster.", 20, footerY + 7)
+  doc.text("2. Logistical fulfillment is routed via the Dhaka Unit Facility.", 20, footerY + 7)
   doc.text("3. High-purity extracts (Scientific Series) are subject to global export audit.", 20, footerY + 12)
   
   doc.save(`RBSL_INSTITUTIONAL_QUOTE_${date.replace(/\//g, "-")}.pdf`)

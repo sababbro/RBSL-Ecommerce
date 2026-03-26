@@ -6,8 +6,7 @@ import {
 } from "@medusajs/framework/workflows-sdk"
 import { 
   IProductModuleService, 
-  IPricingModuleService,
-  ILinkModuleService
+  IPricingModuleService
 } from "@medusajs/types"
 import { Modules } from "@medusajs/framework/utils"
 
@@ -18,7 +17,7 @@ const repairPricingStep = createStep(
     const pricingModule: IPricingModuleService = container.resolve(Modules.PRICING)
     const remoteLink = container.resolve("remoteLink")
 
-    console.log("Starting pricing repair for Sydney region...")
+    console.log("Starting pricing repair for Dhaka Unit region...")
 
     // 1. Get all products and variants
     const products = await productModule.listProducts({}, { relations: ["variants"] })

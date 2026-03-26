@@ -6,7 +6,7 @@ RBSL is a premier biotechnology and clinical extraction firm based in Bangladesh
 ### Architecture
 - **Backend**: Medusa v2 Sovereign Logic.
 - **Frontend**: Next.js Institutional Portal & B2C Storefront.
-- **Regions**: Sydney Hub (Global Origin) & Dhaka Unit (Processing).
+- **Regions**: Dhaka Unit (Primary Sovereignty & Global Processing).
 
 ### Divisions
 1. **RBSL (Institutional)**: Parent entity overseeing biological integrity and high-value procurement.

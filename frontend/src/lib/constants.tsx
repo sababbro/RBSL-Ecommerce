@@ -35,10 +35,17 @@ export const paymentInfoMap: Record<
     icon: <CreditCard />,
   },
   "rbsl-bank-transfer": {
-    title: "RBSL Corporate Credit / Bank Transfer",
+    title: "RBSL Corporate Credit / Dhaka Unit Transfer",
     icon: <CreditCard />,
   },
-  // Add more payment providers here
+  "rbsl-bkash": {
+    title: "bKash - Localized Capital Settlement",
+    icon: <CreditCard />,
+  },
+  "rbsl-nagad": {
+    title: "Nagad - Localized Capital Settlement",
+    icon: <CreditCard />,
+  },
 }
 
 // This only checks if it is native stripe or medusa payments for card payments, it ignores the other stripe-based providers

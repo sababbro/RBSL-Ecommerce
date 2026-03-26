@@ -28,7 +28,7 @@ export default async function B2BDashboardHome() {
     <div className="space-y-10 py-6">
       <div className="flex items-center justify-between border-b border-white/5 pb-8">
         <div>
-          <h1 className="text-4xl font-black tracking-tighter text-white uppercase italic">SYDNEY HUB: ONLINE</h1>
+          <h1 className="text-4xl font-black tracking-tighter text-white uppercase italic">DHAKA UNIT: ONLINE</h1>
           <p className="text-emerald-500 font-black uppercase tracking-[0.3em] text-[10px] mt-2 animate-pulse">Global Logistics: Engaged</p>
         </div>
         <div className="flex space-x-3">
@@ -49,7 +49,7 @@ export default async function B2BDashboardHome() {
             {lifetimeSpend > 0 ? `$${(lifetimeSpend / 100).toLocaleString()}` : "STDBY"}
           </div>
           <p className="text-[10px] text-white/20 font-bold uppercase tracking-widest mt-2 leading-tight">
-            Certified spend across the Sydney Cluster
+            Certified spend across the Dhaka Unit
           </p>
         </div>
 
@@ -82,19 +82,12 @@ export default async function B2BDashboardHome() {
             <LayoutDashboard className="w-5 h-5 text-white/20" />
             <span className="text-[9px] uppercase font-black tracking-[0.3em] text-white/20">Extraction Facility Status</span>
           </div>
-          <div className="grid grid-cols-2 gap-4 mt-1">
+          <div className="grid grid-cols-1 gap-4 mt-1">
              <div className="flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981] animate-pulse" />
                 <div className="flex flex-col">
-                   <span className="text-[10px] text-white font-black uppercase tracking-widest">Sydney Hub</span>
-                   <span className="text-[9px] text-emerald-500/60 font-bold uppercase tracking-widest">Operational</span>
-                </div>
-             </div>
-             <div className="flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]" />
-                <div className="flex flex-col">
-                   <span className="text-[10px] text-white font-black uppercase tracking-widest">Dhaka Unit</span>
-                   <span className="text-[9px] text-emerald-500/60 font-bold uppercase tracking-widest">Processing (Active)</span>
+                   <span className="text-[10px] text-white font-black uppercase tracking-widest">Dhaka Unit Central Facility</span>
+                   <span className="text-[9px] text-emerald-500/60 font-bold uppercase tracking-widest">Operational (Sovereignty Tier)</span>
                 </div>
              </div>
           </div>
@@ -119,7 +112,7 @@ export default async function B2BDashboardHome() {
               <div className="absolute top-1/2 left-0 w-full h-[1px] bg-white/10 -translate-y-[22px]" />
               <div className="flex justify-between relative z-10">
                  {[
-                    { label: "Sydney Hub", status: "completed" },
+                    { label: "Dhaka Unit", status: "completed" },
                     { label: "Transit", status: "completed" },
                     { label: "Customs", status: "active" },
                     { label: "Destination", status: "upcoming" }
@@ -155,7 +148,7 @@ export default async function B2BDashboardHome() {
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-2">
                <TrendingUp className="w-5 h-5 text-white/40" />
-               <span className="text-[10px] uppercase font-black tracking-[0.4em] text-white/60">Biological Purity Feed (Sydney Hub Cluster)</span>
+               <span className="text-[10px] uppercase font-black tracking-[0.4em] text-white/60">Biological Purity Feed (Dhaka Unit Facility)</span>
             </div>
             <div className="flex items-center gap-2 px-3 py-1 bg-white/[0.05] rounded-full border border-white/5">
                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -184,7 +177,7 @@ export default async function B2BDashboardHome() {
                </div>
             </div>
             <div className="space-y-3">
-               <div className="text-[9px] font-black uppercase tracking-widest text-white/30">Sydney Hub Integrity Score</div>
+               <div className="text-[9px] font-black uppercase tracking-widest text-white/30">Dhaka Unit Integrity Score</div>
                <div className="flex items-end gap-2">
                   <span className="text-4xl font-black text-white italic tracking-tighter">PH-9.2</span>
                   <span className="text-[9px] text-emerald-500 font-black uppercase mb-1">Optimal Range</span>

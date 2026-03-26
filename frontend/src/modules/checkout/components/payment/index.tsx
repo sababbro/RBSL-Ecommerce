@@ -9,6 +9,7 @@ import ErrorMessage from "@modules/checkout/components/error-message"
 import PaymentContainer, {
   RBSLBankTransferContainer,
   StripeCardContainer,
+  MFSValidationCard,
 } from "@modules/checkout/components/payment-container"
 import Divider from "@modules/common/components/divider"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
@@ -32,6 +33,10 @@ const Payment = ({
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
     activeSession?.provider_id ?? ""
   )
+  const [mfsData, setMfsData] = useState<Record<string, any>>({
+    trx_id: activeSession?.data?.trx_id || "",
+    sender_number: activeSession?.data?.sender_number || ""
+  })
 
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -80,9 +85,10 @@ const Payment = ({
       const checkActiveSession =
         activeSession?.provider_id === selectedPaymentMethod
 
-      if (!checkActiveSession) {
+      if (!checkActiveSession || (selectedPaymentMethod.startsWith("rbsl-") && selectedPaymentMethod !== "rbsl-bank-transfer")) {
         await initiatePaymentSession(cart, {
           provider_id: selectedPaymentMethod,
+          data: selectedPaymentMethod.startsWith("rbsl-") ? mfsData : {}
         })
       }
 
@@ -108,9 +114,13 @@ const Payment = ({
     return [...availablePaymentMethods].sort((a, b) => {
       if (a.id === "rbsl-bank-transfer") return -1
       if (b.id === "rbsl-bank-transfer") return 1
+      if (a.id.startsWith("rbsl-")) return -1
+      if (b.id.startsWith("rbsl-")) return 1
       return 0
     })
   }, [availablePaymentMethods, cart])
+
+  const isMFS = (methodId: string) => methodId === "rbsl-bkash" || methodId === "rbsl-nagad"
 
   return (
     <div className="bg-white">
@@ -166,6 +176,14 @@ const Payment = ({
                         paymentInfoMap={paymentInfoMap}
                         customer={cart.customer}
                       />
+                    ) : isMFS(paymentMethod.id) ? (
+                      <MFSValidationCard
+                        paymentProviderId={paymentMethod.id}
+                        selectedPaymentOptionId={selectedPaymentMethod}
+                        paymentInfoMap={paymentInfoMap}
+                        data={mfsData}
+                        updateData={setMfsData}
+                      />
                     ) : (
                       <PaymentContainer
                         paymentInfoMap={paymentInfoMap}
@@ -205,7 +223,8 @@ const Payment = ({
             isLoading={isLoading}
             disabled={
               (isStripeLike(selectedPaymentMethod) && !cardComplete) ||
-              (!selectedPaymentMethod && !paidByGiftcard)
+              (!selectedPaymentMethod && !paidByGiftcard) ||
+              (isMFS(selectedPaymentMethod) && (!mfsData.trx_id || !mfsData.sender_number))
             }
             data-testid="submit-payment-button"
           >

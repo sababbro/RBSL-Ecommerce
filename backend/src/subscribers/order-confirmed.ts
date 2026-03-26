@@ -14,7 +14,7 @@ export default async function orderConfirmedSubscriber({
 
   const orderId = event.data.id
   const order = await orderModule.retrieveOrder(orderId, {
-    relations: ["items", "customer", "shipping_address"]
+    relations: ["items", "customer", "shipping_address", "payment_collections.payment_sessions"]
   })
 
   // 3. Export Compliance Logic — Directive 3
@@ -28,7 +28,22 @@ export default async function orderConfirmedSubscriber({
        metadata: {
           ...order.metadata,
           customs_declaration: "RBSL-BIO-EXP-AUTHORIZED",
-          export_protocol: "ACCORD-2024-V1"
+          export_protocol: "ACCORD-2024-V1",
+          processing_unit: "Dhaka Unit"
+       }
+    }])
+  }
+
+  // 4. Local Settlement Tracking — Dhaka Unit Directive
+  const providerId = (order as any).payment_collections?.[0]?.payment_sessions?.[0]?.provider_id
+  if (providerId?.startsWith("rbsl-bkash") || providerId?.startsWith("rbsl-nagad")) {
+    console.log(`[DHAKA UNIT] MFS Payment detected: ${providerId}. Triggering Local Settlement Protocol.`)
+    await orderModule.updateOrders([{
+       id: orderId,
+       metadata: {
+          ...order.metadata,
+          settlement_status: "Local Settlement Verified",
+          logistics_tier: "DHAKA-CORE-EXECUTION"
        }
     }])
   }
@@ -43,7 +58,7 @@ export default async function orderConfirmedSubscriber({
   try {
     // 1. Send Institutional Confirmation to Partner
     const orderEmail = order.email || "partner@rbsl.com"
-    const batchId = (order.metadata?.batch_id as string) || "RBSL-SYD-2024-08A"
+    const batchId = (order.metadata?.batch_id as string) || "RBSL-DHK-2026-01A"
 
     await resend.emails.send({
       from: "RBSL Institutional Logistics <logistics@rbsl.com>",
@@ -83,7 +98,7 @@ export default async function orderConfirmedSubscriber({
       `,
     })
 
-    // 2. Inventory Verification & Low Stock Alert (Sydney Hub)
+    // 2. Inventory Verification & Low Stock Alert (Dhaka Unit)
     const items = order.items || []
     for (const item of items) {
       if (!item.variant_id) continue
@@ -101,11 +116,11 @@ export default async function orderConfirmedSubscriber({
         await resend.emails.send({
           from: "RBSL System Monitor <system@rbsl.com>",
           to: ["logistics@rbsl.com"],
-          subject: `[ALERT] Inventory Depletion - Sydney Hub - ${itemSku}`,
+          subject: `[ALERT] Inventory Depletion - Dhaka Unit - ${itemSku}`,
           html: `
             <div style="background-color: #000; color: #fff; padding: 40px; font-family: sans-serif;">
               <h1 style="color: #ff4444; text-transform: uppercase;">Inventory Depletion Alert</h1>
-              <p>Critical threshold reached for <strong>Scientific Series</strong> allocation at <strong>Sydney Hub</strong>.</p>
+              <p>Critical threshold reached for <strong>Scientific Series</strong> allocation at <strong>Dhaka Unit</strong>.</p>
               <div style="border: 1px solid #333; padding: 20px; margin-top: 20px;">
                 <p><strong>Product:</strong> ${item.title}</p>
                 <p><strong>SKU:</strong> ${itemSku}</p>

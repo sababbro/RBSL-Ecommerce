@@ -8,6 +8,7 @@ import { clx } from "@medusajs/ui"
 
 const NavLinks = [
   { name: "Products", href: "/store" },
+  { name: "Sovereign Intelligence", href: "/marketing" },
   { name: "B2B Wholesale", href: "/b2b/wholesale" },
   { name: "About", href: "/#about" },
 ]
