@@ -25,49 +25,16 @@ module.exports = defineConfig({
       resolve: "./src/modules/b2b",
     },
     payment: {
-      resolve: "@medusajs/medusa/payment",
+      resolve: "@medusajs/payment",
       options: {
         providers: [
           {
-            resolve: "@medusajs/medusa/payment-manual",
-            id: "manual",
-            options: {},
-          },
-          {
-            resolve: "./src/modules/rbsl-payment-manual",
-            id: "rbsl-bank-transfer",
+            resolve: "@medusajs/payment-manual",
+            id: "rbsl-corporate-credit",
             options: {},
           },
         ],
       },
     },
   },
-  plugins: [
-    {
-      resolve: `medusa-file-supabase`,
-      options: {
-        url: process.env.SUPABASE_URL,
-        public_url: process.env.SUPABASE_URL + "/storage/v1/object/public/medusa-media",
-        key: process.env.SUPABASE_KEY,
-        bucket: "medusa-media",
-      },
-    },
-    {
-      resolve: `medusa-plugin-meilisearch`,
-      options: {
-        config: {
-          host: process.env.MEILISEARCH_HOST,
-          apiKey: process.env.MEILISEARCH_API_KEY,
-        },
-        settings: {
-          products: {
-            indexSettings: {
-              searchableAttributes: ["title", "description", "handle"],
-              displayedAttributes: ["id", "title", "description", "handle", "thumbnail"],
-            },
-          },
-        },
-      },
-    },
-  ],
 })

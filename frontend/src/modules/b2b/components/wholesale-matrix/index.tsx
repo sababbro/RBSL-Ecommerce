@@ -19,7 +19,8 @@ type ProductRow = {
   tiers: Tier[]
 }
 
-const defaultProducts: ProductRow[] = [
+// Default static fallback for build-time/ssr
+const fallbackProducts: ProductRow[] = [
   {
     id: "mex-001",
     sku: "SCM-PS-10",
@@ -31,32 +32,6 @@ const defaultProducts: ProductRow[] = [
       { minQty: 10, maxQty: 49, pricePerUnit: 40.0, label: "STANDARD" },
       { minQty: 50, maxQty: 199, pricePerUnit: 33.0, label: "VOLUME" },
       { minQty: 200, maxQty: null, pricePerUnit: 27.0, label: "CONTRACT" },
-    ],
-  },
-  {
-    id: "mex-002",
-    sku: "SCM-PS-30",
-    name: "Scientific Series — Polysaccharide Extract 30%",
-    unit: "kg",
-    currency: "USD",
-    tiers: [
-      { minQty: 1, maxQty: 9, pricePerUnit: 76.0, label: "RETAIL" },
-      { minQty: 10, maxQty: 49, pricePerUnit: 64.0, label: "STANDARD" },
-      { minQty: 50, maxQty: 199, pricePerUnit: 52.0, label: "VOLUME" },
-      { minQty: 200, maxQty: null, pricePerUnit: 43.0, label: "CONTRACT" },
-    ],
-  },
-  {
-    id: "mex-003",
-    sku: "SCM-MYC-BLK",
-    name: "Premium Mycelium Block — Fruiting Grade",
-    unit: "block",
-    currency: "USD",
-    tiers: [
-      { minQty: 1, maxQty: 9, pricePerUnit: 12.0, label: "RETAIL" },
-      { minQty: 10, maxQty: 99, pricePerUnit: 9.5, label: "STANDARD" },
-      { minQty: 100, maxQty: 499, pricePerUnit: 7.8, label: "VOLUME" },
-      { minQty: 500, maxQty: null, pricePerUnit: 6.2, label: "CONTRACT" },
     ],
   },
 ]
@@ -71,8 +46,9 @@ const TIER_ACCENT: Record<string, string> = {
 }
 
 export default function WholesaleMatrix() {
+  const [products, setProducts] = useState<ProductRow[]>(fallbackProducts)
   const [rows, setRows] = useState<Record<string, RowState>>(
-    Object.fromEntries(defaultProducts.map((p) => [p.id, { qty: 0 }]))
+    Object.fromEntries(fallbackProducts.map((p: ProductRow) => [p.id, { qty: 0 }]))
   )
   const [csvInput, setCsvInput] = useState("")
   const [csvError, setCsvError] = useState("")
@@ -88,8 +64,8 @@ export default function WholesaleMatrix() {
     return tier.pricePerUnit * qty
   }
 
-  const grandTotal = defaultProducts.reduce(
-    (acc, p) => acc + lineTotal(p, rows[p.id]?.qty ?? 0),
+  const grandTotal = products.reduce(
+    (acc: number, p: ProductRow) => acc + lineTotal(p, rows[p.id]?.qty ?? 0),
     0
   )
 
@@ -105,7 +81,7 @@ export default function WholesaleMatrix() {
     let hasError = false
     lines.forEach((line) => {
       const [sku, qtyStr] = line.split(",").map((s) => s.trim())
-      const product = defaultProducts.find((p) => p.sku === sku)
+      const product = products.find((p: ProductRow) => p.sku === sku)
       if (!product) {
         setCsvError(`Unknown SKU: ${sku}`)
         hasError = true
@@ -121,7 +97,7 @@ export default function WholesaleMatrix() {
   }
 
   const handleReset = () => {
-    setRows(Object.fromEntries(defaultProducts.map((p) => [p.id, { qty: 0 }])))
+    setRows(Object.fromEntries(products.map((p: ProductRow) => [p.id, { qty: 0 }])))
     setCsvInput("")
     setCsvError("")
   }
@@ -213,7 +189,7 @@ export default function WholesaleMatrix() {
             </thead>
 
             <tbody>
-              {defaultProducts.map((product) => {
+              {products.map((product: ProductRow) => {
                 const qty = rows[product.id]?.qty ?? 0
                 const activeTier = getActiveTier(product, qty)
                 const total = lineTotal(product, qty)
