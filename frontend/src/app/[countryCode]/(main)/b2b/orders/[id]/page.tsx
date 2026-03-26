@@ -1,7 +1,8 @@
 import { retrieveOrder } from "@lib/data/orders"
 import { notFound } from "next/navigation"
-import { CheckCircle2, Clock, ShieldCheck, Truck, LayoutDashboard, FileText, Receipt } from "lucide-react"
+import { CheckCircle2, Clock, ShieldCheck, Truck, LayoutDashboard, Receipt } from "lucide-react"
 import PoPUpload from "@modules/b2b/components/pop-upload"
+import ExportDocumentButton from "@modules/b2b/components/export-document-button"
 
 export default async function B2BOrderPage({ params }: { params: { id: string } }) {
   const order = await retrieveOrder(params.id)
@@ -12,6 +13,8 @@ export default async function B2BOrderPage({ params }: { params: { id: string } 
 
   const b2bStatus = (order.metadata?.b2b_status as string) || "pending"
   const popVerified = order.metadata?.pop_verified === true
+  const countryCode = (order.shipping_address?.country_code as string)?.toUpperCase() || "INTL"
+  const isHighCompliance = ["US", "AE", "GB", "DE", "FR", "CA"].includes(countryCode)
 
   const steps = [
     { name: "Quote Generated", status: "completed", icon: CheckCircle2 },
@@ -119,24 +122,23 @@ export default async function B2BOrderPage({ params }: { params: { id: string } 
           {/* Physical Sovereignty Tier — Directive 1 */}
           {(b2bStatus === "confirmed" || b2bStatus === "awaiting_logistics" || order.status === "completed") && (
             <div className="bg-white/[0.03] p-10 rounded-xl border border-white/5 relative overflow-hidden group">
-              <div className="flex items-center space-x-3 mb-10">
-                <Truck className="w-5 h-5 text-white/20" />
-                <h2 className="text-sm font-black uppercase tracking-[0.3em] text-white italic">Export Documentation & Manifests</h2>
+              <div className="flex items-center justify-between mb-10">
+                <div className="flex items-center space-x-3">
+                  <Truck className="w-5 h-5 text-white/20" />
+                  <h2 className="text-sm font-black uppercase tracking-[0.3em] text-white italic">Export Documentation & Manifests</h2>
+                </div>
+                {isHighCompliance && (
+                  <div className="flex items-center gap-2 bg-emerald-500/10 px-3 py-1.5 rounded border border-emerald-500/20">
+                    <ShieldCheck className="w-3 h-3 text-emerald-500" />
+                    <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest">Compliance Gate: PASSED ({countryCode})</span>
+                  </div>
+                )}
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button className="flex items-center justify-between p-4 bg-black border border-white/10 rounded-lg group hover:border-white/30 transition-all">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-white">Commercial Invoice</span>
-                  <FileText className="w-4 h-4 text-white/40" />
-                </button>
-                <button className="flex items-center justify-between p-4 bg-black border border-white/10 rounded-lg group hover:border-white/30 transition-all">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-white">Packing List</span>
-                  <FileText className="w-4 h-4 text-white/40" />
-                </button>
-                <button className="flex items-center justify-between p-4 bg-black border border-white/10 rounded-lg group hover:border-white/30 transition-all">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-white">Logistics Manifest</span>
-                  <Receipt className="w-4 h-4 text-white/40" />
-                </button>
+                <ExportDocumentButton label="Commercial Invoice" orderId={order.id} type="invoice" />
+                <ExportDocumentButton label="Packing List" orderId={order.id} type="packing_list" />
+                <ExportDocumentButton label="Logistics Manifest" orderId={order.id} type="manifest" />
               </div>
 
               <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between gap-4">
@@ -144,7 +146,9 @@ export default async function B2BOrderPage({ params }: { params: { id: string } 
                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="text-[9px] font-black uppercase tracking-widest text-white/40">Sydney Hub Origin: Authorized</span>
                 </div>
-                <span className="text-[8px] font-black text-white/10 uppercase italic">Manifest Protocol: RBSL-EXP-2024-SYS</span>
+                <div className="text-[8px] font-black text-white/10 uppercase italic tracking-widest leading-relaxed text-right">
+                  Manifest Status: {isHighCompliance ? "Sovereign Compliance Verified" : "Global Release Authorization"}
+                </div>
               </div>
             </div>
           )}
