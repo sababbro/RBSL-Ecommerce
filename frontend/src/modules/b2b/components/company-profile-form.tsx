@@ -3,12 +3,15 @@
 import React, { useState, useEffect } from "react"
 import { sdk } from "@lib/config"
 import toast from "react-hot-toast"
-import { ShieldCheck, AlertCircle } from "lucide-react"
+import { ShieldCheck, AlertCircle, LogIn } from "lucide-react"
+import Link from "next/link"
 
 export default function CompanyProfileForm() {
   const [bin, setBin] = useState("")
   const [license, setLicense] = useState("")
   const [status, setStatus] = useState<"idle" | "verifying" | "verified">("idle")
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   const binRegex = /^\d{13}$/
   const isBinValid = binRegex.test(bin)
@@ -16,13 +19,20 @@ export default function CompanyProfileForm() {
   
   // Load existing metadata on mount
   useEffect(() => {
-    sdk.client.fetch("/store/customers/me", { method: "GET" })
-      .then((res: any) => {
+    const checkAuth = async () => {
+      try {
+        const res: any = await sdk.client.fetch("/store/customers/me", { method: "GET" })
+        setIsAuthenticated(true)
         if (res.customer?.metadata?.bin) setBin(res.customer.metadata.bin)
         if (res.customer?.metadata?.trade_license) setLicense(res.customer.metadata.trade_license)
         if (res.customer?.metadata?.is_verified) setStatus("verified")
-      })
-      .catch(() => {})
+      } catch (err) {
+        setIsAuthenticated(false)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    checkAuth()
   }, [])
 
   const handleVerify = async (e: React.FormEvent) => {
@@ -63,6 +73,48 @@ export default function CompanyProfileForm() {
       setStatus("idle")
       toast.error("Synchronization Failed")
     }
+  }
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="max-w-2xl bg-black border border-white/5 p-12 rounded-2xl shadow-2xl backdrop-blur-3xl">
+        <div className="flex items-center justify-center py-12">
+          <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+        </div>
+      </div>
+    )
+  }
+
+  // Not authenticated - show login prompt
+  if (!isAuthenticated) {
+    return (
+      <div className="max-w-2xl bg-black border border-white/5 p-12 rounded-2xl shadow-2xl backdrop-blur-3xl">
+        <div className="text-center py-8">
+          <div className="w-16 h-16 mx-auto rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+            <LogIn className="w-8 h-8 text-white/30" />
+          </div>
+          <h2 className="text-2xl font-black text-white uppercase italic tracking-tighter mb-4">Authentication Required</h2>
+          <p className="text-sm text-white/40 mb-8">
+            Please login to access the Enterprise Compliance portal and register your corporate identity.
+          </p>
+          <div className="flex flex-col gap-4">
+            <Link 
+              href="/account/login"
+              className="w-full py-4 bg-white text-black font-black uppercase tracking-widest text-xs hover:bg-white/90 transition-all text-center rounded-xl"
+            >
+              Login to Continue
+            </Link>
+            <Link 
+              href="/account/register"
+              className="w-full py-4 border border-white/10 text-white font-black uppercase tracking-widest text-xs hover:bg-white/5 transition-all text-center rounded-xl"
+            >
+              Create Account
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

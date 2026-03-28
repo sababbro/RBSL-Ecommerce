@@ -12,6 +12,7 @@
     "build": "next build",
     "start": "next start -p 8000",
     "lint": "next lint",
+    "type-check": "tsc --noEmit",
     "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
@@ -20,8 +21,10 @@
     "@medusajs/js-sdk": "latest",
     "@medusajs/ui": "latest",
     "@radix-ui/react-accordion": "^1.2.1",
+    "@react-pdf/renderer": "^4.3.2",
     "@stripe/react-stripe-js": "^5.3.0",
     "@stripe/stripe-js": "^8.2.0",
+    "@supabase/supabase-js": "^2.100.1",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.7",
     "lodash": "^4.17.21",

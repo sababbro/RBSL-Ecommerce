@@ -16,6 +16,9 @@ type Props = {
 }
 
 export async function generateStaticParams() {
+  if (process.env.SKIP_BUILD_STATIC_GEN === "true") {
+    return []
+  }
   const product_categories = await listCategories()
 
   if (!product_categories) {

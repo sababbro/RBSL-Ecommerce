@@ -24,3 +24,13 @@ coverage/
 .vscode/
 .idea/
 *.log
+*.txt
+*.zip
+backend/trace.txt
+backend/tsc_files.txt
+backend/*.log
+backend/*.txt
+frontend/*.log
+frontend/*.txt
+!backend/.env.template
+!frontend/.env.template

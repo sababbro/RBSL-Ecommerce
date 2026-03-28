@@ -9,8 +9,8 @@ module.exports = defineConfig({
       storeCors: process.env.STORE_CORS!,
       adminCors: process.env.ADMIN_CORS!,
       authCors: process.env.AUTH_CORS!,
-      jwtSecret: process.env.JWT_SECRET || "supersecret",
-      cookieSecret: process.env.COOKIE_SECRET || "supersecret",
+      jwtSecret: process.env.JWT_SECRET || ((): never => { throw new Error("JWT_SECRET is required") })(),
+      cookieSecret: process.env.COOKIE_SECRET || ((): never => { throw new Error("COOKIE_SECRET is required") })(),
     },
     databaseDriverOptions: {
       connection: {
@@ -19,32 +19,16 @@ module.exports = defineConfig({
         },
       },
     },
+    redisUrl: process.env.REDIS_URL,
+  },
+  admin: {
+    disable: false,
+    path: "/app",
+    backendUrl: "http://localhost:9000",
   },
   modules: {
     b2b: {
       resolve: "./src/modules/b2b",
-    },
-    payment: {
-      resolve: "@medusajs/payment",
-      options: {
-        providers: [
-          {
-            resolve: "@medusajs/payment-manual",
-            id: "rbsl-corporate-credit",
-            options: {},
-          },
-          {
-            resolve: "./src/modules/rbsl-payment-bkash",
-            id: "rbsl-bkash",
-            options: {},
-          },
-          {
-            resolve: "./src/modules/rbsl-payment-nagad",
-            id: "rbsl-nagad",
-            options: {},
-          },
-        ],
-      },
     },
   },
 })

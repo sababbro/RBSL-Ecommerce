@@ -13,6 +13,12 @@ const S3_PATHNAME = process.env.MEDUSA_CLOUD_S3_PATHNAME
  */
 const nextConfig = {
   reactStrictMode: true,
+  transpilePackages: ["@react-pdf/renderer"],
+  output: 'standalone',
+  experimental: {
+    // Optimization for 2GB RAM environments
+    serverSourceMaps: false,
+  },
   logging: {
     fetches: {
       fullUrl: true,

@@ -35,5 +35,13 @@ sdk.client.fetch = async <T>(
     ...init,
     headers: newHeaders,
   }
-  return originalFetch(input, init)
+  try {
+    return await originalFetch(input, init)
+  } catch (error) {
+    if (process.env.NEXT_PHASE === "phase-production-build") {
+      console.warn(`⚠️ Build-time fetch failed for ${input}. Using fallback.`)
+      return [] as any
+    }
+    throw error
+  }
 }

@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { ShieldCheck, Database, Globe, ArrowRight, Layers, Cpu, Fingerprint } from "lucide-react"
 
@@ -53,14 +55,14 @@ export default function MarketingPage() {
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center gap-6">
             <Link 
-              href="/bd/b2b/login" 
+              href="/de/account/b2b/login" 
               className="px-10 py-5 bg-white text-black text-[12px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-white/90 transition-all transform hover:scale-105"
             >
               Initialize Procurement
             </Link>
-            <button className="px-10 py-5 border border-white/10 text-white text-[12px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-white/5 transition-all">
-              Download Credentials
-            </button>
+            <Link href="/de/account/b2b/apply" className="px-10 py-5 border border-white/10 text-white text-[12px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-white/5 transition-all">
+              Apply for Partnership
+            </Link>
           </div>
         </div>
       </section>
@@ -202,7 +204,7 @@ export default function MarketingPage() {
           OPERATED BY MEXIMCO GROUP.
         </p>
         <Link 
-          href="/bd/b2b/login" 
+          href="/de/account/b2b/login" 
           className="text-white border-b-2 border-white/10 pb-2 text-xs font-black uppercase tracking-[0.4em] hover:border-white transition-all inline-flex items-center gap-4"
         >
           Secure Partner Access <ArrowRight className="w-4 h-4" />
