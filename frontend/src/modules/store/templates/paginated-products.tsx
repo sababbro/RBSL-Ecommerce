@@ -68,7 +68,7 @@ export default async function PaginatedProducts({
 
   // Filter out Medusa default seed products — keep only RBSL/Meximco products
   const rbslProducts = products.filter(
-    (p) =>
+    (p: any) =>
       !p.title?.toLowerCase().includes("medusa") &&
       !p.handle?.startsWith("medusa")
   )
@@ -79,7 +79,7 @@ export default async function PaginatedProducts({
         className="grid grid-cols-2 w-full small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8"
         data-testid="products-list"
       >
-        {rbslProducts.map((p) => {
+        {rbslProducts.map((p: any) => {
           return (
             <li key={p.id}>
               <ProductPreview product={p} region={region} />
