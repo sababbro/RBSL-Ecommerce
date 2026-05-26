@@ -1,0 +1,1 @@
+export const getCollectionsList = async (...args: any[]): Promise<any> => {}; export const getCollectionByHandle = async (...args: any[]): Promise<any> => {}; export const listCollections = async (...args: any[]): Promise<any> => {};

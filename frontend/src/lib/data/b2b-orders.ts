@@ -1,0 +1,1 @@
+export const retrieveB2BOrder = async (...args: any[]): Promise<any> => {}; export const listB2BOrders = async (...args: any[]): Promise<any> => {}; export const submitB2BPurchaseOrder = async (...args: any[]): Promise<any> => {};

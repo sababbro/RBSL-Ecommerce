@@ -160,7 +160,7 @@ export default async function B2BOrderPage({ params }: { params: { id: string } 
             </div>
             
             <div className="space-y-6">
-               {order.items?.map((item) => (
+               {order.items?.map((item: any) => (
                  <div key={item.id} className="flex justify-between items-center bg-black/20 p-6 border border-white/5 rounded-lg group hover:border-white/10 transition-all">
                    <div>
                       <div className="text-[10px] font-black text-white uppercase tracking-widest leading-relaxed mb-1">{item.title}</div>

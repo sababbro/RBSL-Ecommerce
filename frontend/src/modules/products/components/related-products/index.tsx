@@ -36,9 +36,9 @@ export default async function RelatedProducts({
   const products = await listProducts({
     queryParams,
     countryCode,
-  }).then(({ response }) => {
+  }).then(({ response }: any) => {
     return response.products.filter(
-      (responseProduct) => responseProduct.id !== product.id
+      (responseProduct: any) => responseProduct.id !== product.id
     )
   })
 
@@ -58,7 +58,7 @@ export default async function RelatedProducts({
       </div>
 
       <ul className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8">
-        {products.map((product) => (
+        {products.map((product: any) => (
           <li key={product.id}>
             <Product region={region} product={product} />
           </li>

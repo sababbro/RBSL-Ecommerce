@@ -45,7 +45,7 @@ export default async function ProductRail({
       </div>
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
         {pricedProducts &&
-          pricedProducts.map((product) => (
+          pricedProducts.map((product: any) => (
             <li key={product.id}>
               <ProductPreview product={product} region={region} isFeatured />
             </li>
