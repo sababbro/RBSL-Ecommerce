@@ -33,8 +33,7 @@ export async function POST(
 
   try {
     // Update customer metadata with application details
-    await customerModuleService.updateCustomers({
-      id: customer_id,
+    await customerModuleService.updateCustomers(customer_id, {
       metadata: {
         b2b_application: {
           company_name,

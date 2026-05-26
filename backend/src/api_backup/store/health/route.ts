@@ -25,7 +25,7 @@ export async function GET(
 
   try {
     // Check Redis
-    const redisCheck = await redisService.ping()
+    const redisCheck = await (redisService as any).ping()
     status.redis = redisCheck === "PONG" ? "healthy" : "unhealthy"
   } catch (err) {
     status.redis = "error: " + (err instanceof Error ? err.message : String(err))

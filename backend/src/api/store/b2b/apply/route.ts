@@ -30,8 +30,7 @@ export async function POST(
   try {
     // Update customer metadata with wholesale application details
     // Medusa v2 uses an object-based update pattern
-    await customerModuleService.updateCustomers({
-      id: customer_id,
+    await customerModuleService.updateCustomers(customer_id, {
       metadata: {
         b2b_application: {
           status: "pending",
