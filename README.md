@@ -78,3 +78,14 @@ This script streamlines the build process and strips development overhead for ma
 ---
 © 2026 **Royal Bengal Shrooms Limited**. Strategic Extraction Division.
 *Empowering clinical innovation through biological sovereignty.*
+
+## Folder Structure
+- `/backend`: Core headless commerce system (Medusa v2), defining API routes, background jobs, payment providers, and database schemas.
+- `/frontend`: User-facing Next.js application, consuming Medusa endpoints to render storefront, product onboarding flows, and user accounts.
+
+## Security & Deployment
+This repository has undergone a security audit to migrate hardcoded configuration values. For a complete deployment:
+1. Copy `.env.example` to `.env` locally or configure it in your CI/CD pipeline.
+2. Replace all placeholder values (`<your_secret_key>`) with actual secrets.
+3. Use the `AUDIT_REPORT.md` (if available locally) to understand the security posture.
+4. Review the `PUBLIC_FILES.md` before deciding what is safe to expose.

@@ -34,3 +34,19 @@ frontend/*.log
 frontend/*.txt
 !backend/.env.template
 !frontend/.env.template
+
+# Security & Environments
+.env
+.env.local
+.env.*.local
+*.pem
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Audit Files
+AUDIT_REPORT.md
+PUBLIC_FILES.md
+PRIVATE_FILES.md

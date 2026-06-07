@@ -24,7 +24,7 @@ module.exports = defineConfig({
   admin: {
     disable: false,
     path: "/app",
-    backendUrl: "http://localhost:9000",
+    backendUrl: process.env.ADMIN_BACKEND_URL || "http://localhost:9000",
   },
   modules: {
     b2b: {
