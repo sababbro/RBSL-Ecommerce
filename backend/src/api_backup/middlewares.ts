@@ -7,7 +7,8 @@ import {
 import Redis from "ioredis"
 
 // Note: Ensure ioredis is installed: npm install ioredis
-const redis = new Redis(process.env.REDIS_URL || "redis://localhost:6379")
+const redisUrl = process.env.REDIS_URL || (process.env.NODE_ENV === "production" ? undefined : "redis://localhost:6379");
+const redis = redisUrl ? new Redis(redisUrl) : null;
 
 export async function rateLimiter(
   req: MedusaRequest,
@@ -18,6 +19,10 @@ export async function rateLimiter(
   const key = `rate-limit:mfs:${ip}`
   
   try {
+    if (!redis) {
+      console.warn("Redis is not configured. Rate limiting is bypassed.");
+      return next();
+    }
     const current = await redis.incr(key)
     if (current === 1) {
       await redis.expire(key, 60) // 60 seconds window
